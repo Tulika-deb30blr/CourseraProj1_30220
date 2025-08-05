@@ -1,7 +1,4 @@
 # CourseraProj1_30220
--- This schema is designed based on the sample data provided in the image.
--- The design has been normalized to ensure data integrity and reduce redundancy,
--- particularly by splitting the sales data into transaction headers and line items.
 
 CREATE TABLE Staff (
     -- Primary Key: 'staff_id' is a unique identifier for each staff member.
@@ -84,3 +81,77 @@ CREATE TABLE SalesItem (
     -- Foreign Key: Links to the product being sold.
     CONSTRAINT fk_item_product FOREIGN KEY (product_id) REFERENCES Product(product_id)
 );
+
+SELECT *
+FROM Branch
+WHERE city = 'Glasgow';
+
+SELECT city, COUNT(branchNumber) AS numberOfBranches
+FROM Branch
+GROUP BY city
+ORDER BY city;
+
+SELECT firstName, lastName, "position", salary
+FROM Staff
+WHERE branchNumber = 'B003'
+ORDER BY lastName, firstName;
+
+SELECT COUNT(staffNumber) AS totalStaff, SUM(salary) AS totalSalary
+FROM Staff;
+
+SELECT "position", COUNT(staffNumber) AS numberOfStaff
+FROM Staff
+WHERE branchNumber IN (SELECT branchNumber FROM Branch WHERE city = 'Glasgow')
+GROUP BY "position"
+ORDER BY "position";
+
+SELECT b.street, b.city, s.firstName, s.lastName
+FROM Branch b
+JOIN Staff s ON b.managerStaffNumber = s.staffNumber
+ORDER BY b.city, b.street;
+
+SELECT firstName, lastName, "position"
+FROM Staff
+WHERE supervisorStaffNumber = 'SA9';
+
+SELECT propertyNumber, street, type, rent
+FROM PropertyForRent
+WHERE city = 'Glasgow'
+ORDER BY rent;
+
+SELECT *
+FROM PropertyForRent
+WHERE staffNumber = 'SA9';
+
+SELECT staffNumber, COUNT(propertyNumber) AS numberOfProperties
+FROM PropertyForRent
+WHERE branchNumber = 'B003'
+GROUP BY staffNumber
+ORDER BY staffNumber;
+
+SELECT p.*
+FROM PropertyForRent p
+JOIN PropertyOwner po ON p.ownerNumber = po.ownerNumber
+WHERE p.branchNumber = 'B003' AND po.ownerType = 'Business';
+
+SELECT type, COUNT(propertyNumber) AS numberOfProperties
+FROM PropertyForRent
+GROUP BY type
+ORDER BY type;
+
+SELECT po.*
+FROM PropertyOwner po
+WHERE po.ownerNumber IN (
+    SELECT ownerNumber
+    FROM PropertyForRent
+    GROUP BY ownerNumber
+    HAVING COUNT(propertyNumber) > 1
+) AND po.ownerType = 'Private';
+
+SELECT *
+FROM PropertyForRent
+WHERE type = 'Flat'
+  AND rooms >= 3
+  AND rent <= 350
+  AND city = 'Aberdeen';
+  
