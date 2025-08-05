@@ -83,11 +83,11 @@ CREATE TABLE SalesItem (
 );
 
 SELECT *
-FROM Branch
-WHERE city = 'Glasgow';
+FROM Sales_outlet
+WHERE city = 'New York';
 
-SELECT city, COUNT(branchNumber) AS numberOfBranches
-FROM Branch
+SELECT city, COUNT(salestransactionid) AS numberOfBranches
+FROM Sales_transaction
 GROUP BY city
 ORDER BY city;
 
@@ -106,7 +106,7 @@ GROUP BY "position"
 ORDER BY "position";
 
 SELECT b.street, b.city, s.firstName, s.lastName
-FROM Branch b
+FROM sales_outlet b
 JOIN Staff s ON b.managerStaffNumber = s.staffNumber
 ORDER BY b.city, b.street;
 
@@ -115,13 +115,13 @@ FROM Staff
 WHERE supervisorStaffNumber = 'SA9';
 
 SELECT propertyNumber, street, type, rent
-FROM PropertyForRent
-WHERE city = 'Glasgow'
+FROM Customer
+WHERE city = 'New York'
 ORDER BY rent;
 
 SELECT *
-FROM PropertyForRent
-WHERE staffNumber = 'SA9';
+FROM Customer
+WHERE customer_id = '3004';
 
 SELECT staffNumber, COUNT(propertyNumber) AS numberOfProperties
 FROM PropertyForRent
